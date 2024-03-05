@@ -1,0 +1,587 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Admin Panel",
+        "description": "With Passport login and datatable custom filter",
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost/laravel-example-admin/public/api/",
+            "description": "Demo API Server"
+        }
+    ],
+    "paths": {
+        "/login": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "After Login response get the token and add to bearer_token",
+                "operationId": "authLogin",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "not found"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/forgot-password": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Forgot Password Sent OTP To User Email",
+                "operationId": "forgot-password",
+                "requestBody": {
+                    "description": "Forgot Password",
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "email"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "description": "Enter email",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "not found"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/reset-password": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Reset Password Using OTP",
+                "operationId": "reset-password",
+                "requestBody": {
+                    "description": "Reset Password",
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "otp",
+                                    "password",
+                                    "confirm_password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "description": "Enter email",
+                                        "type": "string"
+                                    },
+                                    "otp": {
+                                        "description": "Enter otp",
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "description": "Enter password",
+                                        "type": "string"
+                                    },
+                                    "confirm_password": {
+                                        "description": "Enter confirm password",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "not found"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/logout": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Logout user and invalidate token",
+                "operationId": "logout",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "not found"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/get-profile": {
+            "get": {
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Get profile details",
+                "operationId": "getprofile",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "not found"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/update-profile": {
+            "post": {
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Update Profile",
+                "operationId": "update-profile",
+                "requestBody": {
+                    "description": "Update Profile",
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "name"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "description": "Enter email",
+                                        "type": "string"
+                                    },
+                                    "name": {
+                                        "description": "Enter name",
+                                        "type": "string"
+                                    },
+                                    "profile": {
+                                        "description": "Select profile photo",
+                                        "type": "file",
+                                        "format": "file"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "not found"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/change-password": {
+            "post": {
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Change your Password",
+                "operationId": "change-password",
+                "requestBody": {
+                    "description": "Change Password",
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "old_password",
+                                    "new_password",
+                                    "cnew_password"
+                                ],
+                                "properties": {
+                                    "old_password": {
+                                        "description": "Enter current password",
+                                        "type": "string"
+                                    },
+                                    "new_password": {
+                                        "description": "Enter new password",
+                                        "type": "string"
+                                    },
+                                    "cnew_password": {
+                                        "description": "Enter confirm password",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "not found"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/save-update-device": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Save Device For User",
+                "description": "Save Device for user",
+                "operationId": "save-update-device",
+                "requestBody": {
+                    "description": "Update Profile",
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "user_id",
+                                    "api_level",
+                                    "brand",
+                                    "build_number",
+                                    "device_country",
+                                    "device_name",
+                                    "manufacturer",
+                                    "model",
+                                    "system_name",
+                                    "system_version",
+                                    "version",
+                                    "device_token"
+                                ],
+                                "properties": {
+                                    "user_id": {
+                                        "description": "User Id",
+                                        "type": "string"
+                                    },
+                                    "api_level": {
+                                        "description": "Enter api level",
+                                        "type": "string"
+                                    },
+                                    "brand": {
+                                        "description": "Enter brand",
+                                        "type": "string"
+                                    },
+                                    "build_number": {
+                                        "description": "Enter build number",
+                                        "type": "string"
+                                    },
+                                    "device_country": {
+                                        "description": "Enter device country",
+                                        "type": "string"
+                                    },
+                                    "device_name": {
+                                        "description": "Enter device name",
+                                        "type": "string"
+                                    },
+                                    "manufacturer": {
+                                        "description": "Enter manufacturer",
+                                        "type": "string"
+                                    },
+                                    "model": {
+                                        "description": "Enter model",
+                                        "type": "string"
+                                    },
+                                    "system_name": {
+                                        "description": "Enter system name",
+                                        "type": "string"
+                                    },
+                                    "system_version": {
+                                        "description": "Enter system version",
+                                        "type": "string"
+                                    },
+                                    "version": {
+                                        "description": "Enter version",
+                                        "type": "string"
+                                    },
+                                    "device_token": {
+                                        "description": "Enter device token",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status_code": {
+                                            "description": "The response code",
+                                            "type": "integer"
+                                        },
+                                        "message": {
+                                            "description": "The response message",
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "description": "The response data",
+                                            "type": "array",
+                                            "items": {}
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation errors!",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status_code": {
+                                            "description": "The response code",
+                                            "type": "integer"
+                                        },
+                                        "message": {
+                                            "description": "The response message",
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "description": "The response data",
+                                            "type": "array",
+                                            "items": {}
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid credential",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status_code": {
+                                            "description": "The response code",
+                                            "type": "integer"
+                                        },
+                                        "message": {
+                                            "description": "The response message",
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "description": "The response data",
+                                            "type": "array",
+                                            "items": {}
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/get-author": {
+            "get": {
+                "tags": [
+                    "Author"
+                ],
+                "summary": "Get the author list",
+                "operationId": "getauthor",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "not found"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearer_token": {
+                "type": "apiKey",
+                "description": "Enter token in format (Bearer <token>)",
+                "name": "Authorization",
+                "in": "header"
+            }
+        }
+    }
+}
